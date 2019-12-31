@@ -1,6 +1,6 @@
 // main.js
 var io = require('socket.io-client');
-
+const GeneralBot = require('./BotGeneral.js')
 var socket = io('http://botws.generals.io');
 
 socket.on('disconnect', function() {
