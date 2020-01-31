@@ -2,5 +2,5 @@
 
 Generals.io bot (in development)
 
-Replays:
+Replays (itsdatboi):
 http://generals.io/replays/S5zmJJZML
