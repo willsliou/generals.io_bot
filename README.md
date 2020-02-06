@@ -3,7 +3,7 @@
 Generals.io bot (in development)
 
 Run:
-generals.io_bot/past
+generals.io_bot/past  
 node main.js
 
 Replays (itsdatboi):
