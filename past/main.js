@@ -10,17 +10,20 @@
  // when to spread out 
 
 // main.js
-var io = require('socket.io-client');
-const GeneralBot = require('./BotGeneral.js')
-var socket = io('http://botws.generals.io');
+// var io = require('socket.io-client');
+const io = require('socket.io-client');
+const socket = io('wss://botws.generals.io/');
 
 socket.on('disconnect', function() {
-	console.error('Disconnected from server.');
-	process.exit(1);
+    console.error('Disconnected from server.');
+    process.exit(1);
 });
 
 socket.on('connect', function() {
-	console.log('Connected to server.');
+    console.log('Connected to server.');
+});
+
+
 /* Don't lose this user_id or let other people see it!
  * Anyone with your user_id can play on your bot's account and pretend to be your bot.
  * If you plan on open sourcing your bot's code (which we strongly support), we recommend
@@ -40,7 +43,7 @@ var custom_game_id = 'my_private_game';
 socket.emit('join_private', custom_game_id, user_id);
 socket.emit('set_force_start', custom_game_id, true);
 console.log('Joined custom game at http://bot.generals.io/games/' + encodeURIComponent(custom_game_id));
-});
+
 
 
 // GAME start ------------------------------------------------------------
