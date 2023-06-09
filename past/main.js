@@ -30,7 +30,7 @@ socket.on('connect', function() {
  * replacing this line with something that instead supplies the user_id via an environment variable, e.g.
  * var user_id = process.env.BOT_USER_ID;
  */
-var user_id = 'my_example_bot_id';
+var user_id = 'jenniferlosingsimulator';
 var username = '[Bot] Santa Doge Bot';
 
 // Set the username for the bot.
@@ -39,7 +39,7 @@ socket.emit('set_username', user_id, username);
 
 // Join a custom game and force start immediately.
 // Custom games are a great way to test your bot while you develop it because you can play against your bot!
-var custom_game_id = 'my_private_game';
+var custom_game_id = 'jenniferlosingsimulator';
 socket.emit('join_private', custom_game_id, user_id);
 socket.emit('set_force_start', custom_game_id, true);
 console.log('Joined custom game at http://bot.generals.io/games/' + encodeURIComponent(custom_game_id));
