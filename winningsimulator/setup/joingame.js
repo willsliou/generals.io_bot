@@ -1,4 +1,4 @@
-const { socket, user_id } = require('./connection.js');
+const { socket, user_id } = require('./connection.js').default;
 
 var custom_game_id = 'willsalwayswins';
 socket.emit('join_private', custom_game_id, user_id);

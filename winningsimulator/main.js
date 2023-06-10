@@ -34,6 +34,7 @@ socket.on('game_start', function(data) {
  * Example 1: patching a diff of [1, 1, 3] onto [0, 0] yields [0, 3].
  * Example 2: patching a diff of [0, 1, 2, 1] onto [0, 0] yields [2, 0].
  */
+
 function patch(old, diff) {
 	var out = [];
 	var i = 0;
@@ -54,59 +55,59 @@ function patch(old, diff) {
 socket.on('game_update', function(data) {
 	// TODO------------------------------------------------------------
 	// Patch the city and map diffs into our local variables.
-cities = patch(cities, data.cities_diff);
-map = patch(map, data.map_diff);
-generals = data.generals;
+	cities = patch(cities, data.cities_diff);
+	map = patch(map, data.map_diff);
+	generals = data.generals;
 
-// The first two terms in |map| are the dimensions.
-var width = map[0];
-var height = map[1];
-var size = width * height;
+	// The first two terms in |map| are the dimensions.
+	var width = map[0];
+	var height = map[1];
+	var size = width * height;
 
-// The next |size| terms are army values.
-// armies[0] is the top-left corner of the map.
-var armies = map.slice(2, size + 2);
+	// The next |size| terms are army values.
+	// armies[0] is the top-left corner of the map.
+	var armies = map.slice(2, size + 2);
 
-// The last |size| terms are terrain values.
-// terrain[0] is the top-left corner of the map.
-var terrain = map.slice(size + 2, size + 2 + size);
+	// The last |size| terms are terrain values.
+	// terrain[0] is the top-left corner of the map.
+	var terrain = map.slice(size + 2, size + 2 + size);
 
-// Make a random move.
-while (true) {
- // Pick a random tile.
-	var index = Math.floor(Math.random() * size);
+	// Make a random move.
+	while (true) {
+	// Pick a random tile.
+		var index = Math.floor(Math.random() * size);
 
- 	// If we own this tile, make a random move starting from it.
+		// If we own this tile, make a random move starting from it.
 
 
-  if (terrain[index] === playerIndex) {
-	  
-	 var row = Math.floor(index / width);
-	 var col = index % width;
-	 var endIndex = index;
+	if (terrain[index] === playerIndex) {
+		
+		var row = Math.floor(index / width);
+		var col = index % width;
+		var endIndex = index;
 
-// 	 var rand = Math.random();
-// 	 if (rand < 0.25 && col > 0) { // left
-// 		 endIndex--;
-// 	 } else if (rand < 0.5 && col < width - 1) { // right
-// 		 endIndex++;
-// 	 } else if (rand < 0.75 && row < height - 1) { // down
-// 		 endIndex += width;
-// 	 } else if (row > 0) { //up
-// 		 endIndex -= width;
-// 	 } else {
-// 		 continue;
-// 	 }
+	// 	 var rand = Math.random();
+	// 	 if (rand < 0.25 && col > 0) { // left
+	// 		 endIndex--;
+	// 	 } else if (rand < 0.5 && col < width - 1) { // right
+	// 		 endIndex++;
+	// 	 } else if (rand < 0.75 && row < height - 1) { // down
+	// 		 endIndex += width;
+	// 	 } else if (row > 0) { //up
+	// 		 endIndex -= width;
+	// 	 } else {
+	// 		 continue;
+	// 	 }
 
-	 // Would we be attacking a city? Don't attack cities.
-	 if (cities.indexOf(endIndex) >= 0) {
-		 continue;
-	 }
+		// Would we be attacking a city? Don't attack cities.
+		if (cities.indexOf(endIndex) >= 0) {
+			continue;
+		}
 
-	 socket.emit('attack', index, endIndex);
-	 break;
- }
-}
+		socket.emit('attack', index, endIndex);
+		break;
+	}
+	}
 });
 
 
