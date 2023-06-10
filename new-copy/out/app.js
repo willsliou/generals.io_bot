@@ -179,6 +179,22 @@ socket.on('game_update', (data) => {
     redis.listPush("scores", data.scores);
     redis.listPush("maxArmyOnTile", maxArmyOnTile);
     redis.listPush("moveCount", bot.moveCount);
+
+
+
+    console.log("Entering findNearestCity(). Printing GameState...")
+    console.log('turn:', bot.gameState.turn)
+    console.log('width:', bot.gameState.width)
+    console.log('height:', bot.gameState.height)
+    console.log('size:', bot.gameState.size)
+    console.log('ownGeneral:', bot.gameState.ownGeneral)
+    console.log('cities:', bot.gameState.cities)
+    console.log('widiscoveredTilesdth:', bot.gameState.discoveredTiles)
+    console.log('armies:', bot.gameState.armies)
+    console.log('terrain:', bot.gameState.terrain)
+    console.log('enemyGeneral:', bot.gameState.enemyGeneral)
+    console.log('ownTiles:', bot.gameState.ownTiles)
+    console.log('enemyTiles:', bot.gameState.enemyTiles)
 });
 
 socket.on('game_lost', (data) => {

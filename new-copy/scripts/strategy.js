@@ -21,7 +21,7 @@ export default class Strategy {
 		//enemy general found. And your position is more hidden aka in one of the corners, and 
 		// you have gotten a building, and 
 
-		if(bot.gameState.enemyGeneral != -1 && ) {
+		if(bot.gameState.enemyGeneral != -1) {
 			this.endGame(bot);
 		} else if(bot.isInfiltrating) {
 			//ignore every other strategies and attack enemy until no more attacks are possible
@@ -36,6 +36,9 @@ export default class Strategy {
 			this.midGame(bot, turn);
 		}
 	}
+
+// my strategies
+
 
 	static earlyGame(bot, turn) {
 		if(turn <= INITIAL_WAIT_TURNS) {
@@ -76,6 +79,35 @@ export default class Strategy {
 		}
 	}
 
+
+
+	
+	// Define the function to find the nearest city
+	static findNearestCity(bot, turn) {
+		// bot.gameState.turn
+
+
+	  const startTile = bot.currentTile;
+	  const cityTiles = gameMap.getCityTiles(); // Get all the city tiles from the game map
+	
+	  // Find the nearest city tile using A* algorithm
+	  let nearestCityTile = null;
+	  let shortestDistance = Infinity;
+	
+	  for (const cityTile of cityTiles) {
+		const path = Algorithms.aStar(gameState, gameMap, startTile, cityTile);
+	
+		// If a shorter path to the city tile is found, update the nearestCityTile and shortestDistance
+		if (path && path.length < shortestDistance) {
+		  nearestCityTile = cityTile;
+		  shortestDistance = path.length;
+		}
+	  }
+	
+	  return nearestCityTile;
+	}
+	
+
 	//enemy general spotted
 	static endGame(bot) {
 		if(!bot.isInfiltrating) {
@@ -98,3 +130,25 @@ export default class Strategy {
 		}
 	}
 }
+// 	//enemy general spotted
+// 	static endGame(bot) {
+// 		if(!bot.isInfiltrating) {
+// 			RushGeneral.rush(bot);
+// 		} else {
+// 			//tryToKillGeneral sets infiltrating to false if its true
+// 			if(!RushGeneral.tryToKillGeneral(bot)) {
+// 				//finish infiltrating first. (enemy can be discovered diagonally. move to adjacent tile first)
+// 				let pathToGeneral = Algorithms.aStar(bot.gameState, bot.gameMap, bot.lastAttackedIndex, [bot.gameState.enemyGeneral]);
+
+// 				//either path has ended already, or tile does not have enough armies to attack
+// 				if(pathToGeneral.length <= 2 || bot.gameMap.remainingArmiesAfterAttack(bot.gameState, pathToGeneral[0], pathToGeneral[1]) <= 1) {
+// 					bot.isInfiltrating = false;
+// 				}
+
+// 				if(pathToGeneral.length > 2) {
+// 					bot.move({"start": pathToGeneral[0], "end": pathToGeneral[1]});
+// 				}
+// 			}
+// 		}
+// 	}
+// }
