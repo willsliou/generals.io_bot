@@ -2,14 +2,14 @@
 	"gameConfig": {
 		"GAME_SERVER_URL": "wss://botws.generals.io/",
 		"MAX_TURNS": 5000,
-		"BOT_ID_PREFIX": "flobot",
-		"userId": "datboi",
-		"username": "[Bot] hehe",
-		"customGameId": "floatbot",
-		"customGameSpeed": 4,
+		"BOT_ID_PREFIX": "WillBot",
+		"userId": "willbot",
+		"username": "[Bot] Winner Wills",
+		"customGameId": "winnerwills",
+		"customGameSpeed": 1,
 		"warCry": [
-			"Beep bop blop!",
-			"Learn more at github.com/CorsairCoalition/Flobot"
+			"Come at me bro ;)",
+			"FEAR ME MUHAHAHAHHAHAHAHAHA"
 		]
 	},
 	"redisConfig": {

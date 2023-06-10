@@ -59,7 +59,7 @@ async function run(configFile) {
     redisConfig.HOST = process.env['REDIS_HOST'] || redisConfig.HOST;
     redisConfig.PORT = parseInt(process.env['REDIS_PORT']) || redisConfig.PORT;
     redisConfig.TLS = process.env['REDIS_TLS'] === 'true' || redisConfig.TLS;
-    gameConfig.customGameSpeed = gameConfig.customGameSpeed || 4;
+    gameConfig.customGameSpeed = gameConfig.customGameSpeed || 1;
 }
 await program.parseAsync();
 const options = program.opts();

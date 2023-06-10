@@ -18,8 +18,10 @@ export default class Strategy {
 	static pickStrategy(bot) {
 		let turn = bot.gameState.turn;
 
-		//enemy general found. ignore other strategies and straight on attack
-		if(bot.gameState.enemyGeneral != -1) {
+		//enemy general found. And your position is more hidden aka in one of the corners, and 
+		// you have gotten a building, and 
+
+		if(bot.gameState.enemyGeneral != -1 && ) {
 			this.endGame(bot);
 		} else if(bot.isInfiltrating) {
 			//ignore every other strategies and attack enemy until no more attacks are possible
