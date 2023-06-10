@@ -5,7 +5,7 @@ import fs from 'node:fs/promises';
 import Bot from './scripts/bot.js';
 import { Log } from './utils.js';
 import crypto from 'crypto';
-const BOT_TYPE = 'flobot';
+const BOT_TYPE = 'WillsBot';
 const packageJsonPath = new URL('../package.json', import.meta.url);
 const pkg = JSON.parse(await fs.readFile(packageJsonPath, 'utf8'));
 let gameConfig;
@@ -118,6 +118,8 @@ socket.on('error_set_username', (message) => {
         Log.stderr(`[error_set_username] ${message}`);
     }
 });
+
+
 socket.on('game_start', (data) => {
     playerIndex = data.playerIndex;
     bot = undefined;
@@ -139,6 +141,8 @@ socket.on('game_start', (data) => {
         });
     }
 });
+
+
 socket.on('game_update', (data) => {
     if (bot === undefined) {
         bot = new Bot(socket, playerIndex, data);
@@ -176,6 +180,7 @@ socket.on('game_update', (data) => {
     redis.listPush("maxArmyOnTile", maxArmyOnTile);
     redis.listPush("moveCount", bot.moveCount);
 });
+
 socket.on('game_lost', (data) => {
     Log.stdout(`[game_lost] ${replay_id}, killer: ${usernames[data.killer]}`);
     redis.publish("state", {
@@ -187,6 +192,7 @@ socket.on('game_lost', (data) => {
     });
     leaveGame();
 });
+
 socket.on('game_won', () => {
     Log.stdout(`[game_won] ${replay_id}`);
     redis.publish("state", {
@@ -213,6 +219,7 @@ socket.on('queue_update', (data) => {
     }
     queueNumPlayers = data.numPlayers;
 });
+
 function joinGame() {
     currentGameNumber++;
     Log.stdout(`[joining] game ${currentGameNumber} of ${options['numberOfGames']}`);
