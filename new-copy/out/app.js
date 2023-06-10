@@ -1,3 +1,4 @@
+// import fs from 'fs';
 import { Command } from 'commander';
 import Redis from './redis.js';
 import io from 'socket.io-client';
@@ -11,6 +12,13 @@ const pkg = JSON.parse(await fs.readFile(packageJsonPath, 'utf8'));
 let gameConfig;
 let redisConfig;
 let botId;
+let gameHistoryFlag = 0;
+
+// Generate a unique timestamp for the file name
+const timestamp = Date.now();
+const directoryPath = '/Users/willsliou/Documents/GitHub/generals.io_bot/new-copy/out/gameState_history'
+const filePath = `${directoryPath}/gamestate_${timestamp}.txt`;
+
 process.once('SIGINT', async () => {
     Log.stderr('Interrupted. Exiting gracefully.');
     if (gameJoined) {
@@ -80,6 +88,7 @@ socket.on("gio_error", (message) => {
     Log.stderr(`[gio_error] ${message}`);
     process.exit(4);
 });
+
 socket.on('connect', async () => {
     Log.stdout(`[connected] ${gameConfig.GAME_SERVER_URL}`);
     socket.emit('get_username', gameConfig.userId, (username) => {
@@ -93,8 +102,11 @@ socket.on('connect', async () => {
         }
         gameConfig.username = username;
         joinGame();
+        Log.stdout(`https://bot.generals.io/games/${gameConfig.customGameId}`);
     });
 });
+
+
 socket.on('disconnect', async (reason) => {
     await redis.publish("state", { disconnected: reason });
     switch (reason) {
@@ -140,8 +152,36 @@ socket.on('game_start', (data) => {
             Log.debug(`sent: [chat_message] ${gameConfig.warCry[i]}`);
         });
     }
+
+    // Write the header to the file
+    writeHeader(filePath);
 });
 
+// Write header to file for .csv
+function writeHeader(filePath) {
+    const header = 'turn,width,height,size,ownGeneral,cities,discoveredTiles,armies,terrain,enemyGeneral,ownTiles,enemyTiles\n';
+
+    fs.writeFile(filePath, header, (err) => {
+        if (err) {
+            console.error('Error writing to file:', err);
+        } else {
+            console.log('Header written to file:', filePath);
+        }
+    });
+}
+
+// Function to append game state to the CSV file
+function appendGameState(filePath, bot) {
+    const content = `${bot.gameState.turn},\n${bot.gameState.width},\n${bot.gameState.height},\n${bot.gameState.size},\n${bot.gameState.ownGeneral},\n${JSON.stringify(bot.gameState.cities)},\n${JSON.stringify(bot.gameState.discoveredTiles)},\n${JSON.stringify(bot.gameState.armies)},\n${JSON.stringify(bot.gameState.terrain)},\n${bot.gameState.enemyGeneral},\n${JSON.stringify(Array.from(bot.gameState.ownTiles.entries()))},\n${JSON.stringify(Array.from(bot.gameState.enemyTiles.entries()))}\n`;
+    console.log(content)
+    fs.writeFile(filePath, content, { flag: 'a' }, (err) => {
+        if (err) {
+            console.error('Error writing to file:', err);
+        } else {
+            console.log('Variables written to file:', filePath);
+        }
+    });
+}
 
 socket.on('game_update', (data) => {
     if (bot === undefined) {
@@ -182,20 +222,34 @@ socket.on('game_update', (data) => {
 
 
 
-    console.log("Entering findNearestCity(). Printing GameState...")
-    console.log('turn:', bot.gameState.turn)
-    console.log('width:', bot.gameState.width)
-    console.log('height:', bot.gameState.height)
-    console.log('size:', bot.gameState.size)
-    console.log('ownGeneral:', bot.gameState.ownGeneral)
-    console.log('cities:', bot.gameState.cities)
-    console.log('widiscoveredTilesdth:', bot.gameState.discoveredTiles)
-    console.log('armies:', bot.gameState.armies)
-    console.log('terrain:', bot.gameState.terrain)
-    console.log('enemyGeneral:', bot.gameState.enemyGeneral)
-    console.log('ownTiles:', bot.gameState.ownTiles)
-    console.log('enemyTiles:', bot.gameState.enemyTiles)
+    // console.log("Entering findNearestCity(). Printing GameState...")
+    // console.log('turn=', bot.gameState.turn)
+    // console.log('width=', bot.gameState.width)
+    // console.log('height=', bot.gameState.height)
+    // console.log('size=', bot.gameState.size)
+    // console.log('ownGeneral=', bot.gameState.ownGeneral)
+    // console.log('cities=', bot.gameState.cities)
+    // console.log('discoveredTiles=', bot.gameState.discoveredTiles)
+    // console.log('armies=', bot.gameState.armies)
+    // console.log('terrain=', bot.gameState.terrain)
+    // console.log('enemyGeneral=', bot.gameState.enemyGeneral)
+    // console.log('ownTiles=', bot.gameState.ownTiles)
+    // own tiles is a dictionary. Each tile is indexed. 1 2 3 4.... 20 for the first row 21 22.... for the second row etc.
+    // key is the index
+    // value is the number of army troops.
+    console.log('enemyTiles=', bot.gameState.enemyTiles)
+
+
+    // const index = 0
+    // In your game loop, append the current game state to the file
+    appendGameState(filePath, bot);
+
 });
+
+
+
+
+
 
 socket.on('game_lost', (data) => {
     Log.stdout(`[game_lost] ${replay_id}, killer: ${usernames[data.killer]}`);
@@ -209,6 +263,10 @@ socket.on('game_lost', (data) => {
     leaveGame();
 });
 
+
+
+
+
 socket.on('game_won', () => {
     Log.stdout(`[game_won] ${replay_id}`);
     redis.publish("state", {
@@ -218,6 +276,13 @@ socket.on('game_won', () => {
     });
     leaveGame();
 });
+
+
+
+
+
+
+
 let queueNumPlayers = 0;
 let forceStartSet = false;
 let customOptionsSet = false;
