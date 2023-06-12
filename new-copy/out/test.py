@@ -64,3 +64,21 @@ Map(39) {
 '''
 python_dict = convert_js_map_to_python_dict(js_map_str)
 print(python_dict)
+
+
+
+
+# turn -> int
+# width-> int
+# height -> int
+# size -> int
+# ownGeneral -> int
+# cities -> array
+# discoveredTiles ->array
+# armies ->array
+# terrain -> array
+
+# enemygeneral -> int
+# ownTiles -> dictionary
+# enemyTiles -> dictionary
+
